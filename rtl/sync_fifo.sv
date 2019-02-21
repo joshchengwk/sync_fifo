@@ -20,7 +20,7 @@ module sync_fifo #(
 						LOOKAHEAD = 1)
 		(
 		input				clk		,	// Clock input
-		input				rst_n		,	// Active low reset
+		input				rst		,	// Active low reset
 		input				sclr		,	// FIFO synchronous clear
 		input	[DATA_WIDTH-1:0]	data_in		,	// Data input
 		input				rd_en		,	// Read enable
@@ -58,9 +58,9 @@ assign aempty = (word_cnt <= (ADDR_WIDTH+1)'(AEMPTY_LEVEL));
 
 
 //Write pointer
-always_ff@(posedge clk or negedge rst_n)
+always_ff@(posedge clk or posedge rst)
 begin
-	if (~rst_n) 
+	if (rst) 
 		wr_pointer <= (ADDR_WIDTH)'(0);
 	else if (sclr)
 		wr_pointer <= (ADDR_WIDTH)'(0);
@@ -72,9 +72,9 @@ end
 generate 
 if (LOOKAHEAD)
 begin
-	always_ff@(posedge clk or negedge rst_n)
+	always_ff@(posedge clk or posedge rst)
 	begin
-		if (~rst_n)
+		if (rst)
 			rd_pointer <= (ADDR_WIDTH)'(1);		//init to 1 for lookahead architecture
 		else if (sclr)
 			rd_pointer <= (ADDR_WIDTH)'(1);
@@ -84,9 +84,9 @@ begin
 end
 else
 begin
-	always_ff@(posedge clk or negedge rst_n)
+	always_ff@(posedge clk or posedge rst)
 	begin
-		if (~rst_n)
+		if (rst)
 			rd_pointer <= (ADDR_WIDTH)'(0);
 		else if (sclr)
 			rd_pointer <= (ADDR_WIDTH)'(0);
@@ -97,9 +97,9 @@ end
 endgenerate
 
 //Word counter
-always_ff@ (posedge clk or negedge rst_n)
+always_ff@ (posedge clk or posedge rst)
 begin
-	if (~rst_n) 
+	if (rst) 
 		word_cnt <= (ADDR_WIDTH+1)'(0);
 	else if (sclr)
 		word_cnt <= (ADDR_WIDTH+1)'(0);
@@ -166,9 +166,9 @@ begin
 	
 	
 	//First word MUX
-	always_ff@(posedge clk or negedge rst_n)
+	always_ff@(posedge clk or posedge rst)
 	begin
-		if (~rst_n)
+		if (rst)
 			use_buffer <= 1'b0;
 		else if (use_buffer_next)
 			use_buffer <= 1'b1;
@@ -177,9 +177,9 @@ begin
 	end
          
 	//First word buffer
-	always_ff@(posedge clk or negedge rst_n)
+	always_ff@(posedge clk or posedge rst)
 	begin
-		if (~rst_n)
+		if (rst)
 			word_buffer <= (DATA_WIDTH)'(0);
 		else if (use_buffer_next)
 			word_buffer <= data_in;
