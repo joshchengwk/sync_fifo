@@ -48,7 +48,7 @@ logic	[DATA_WIDTH-1:0]	data_ram;
 logic				ram_wren;
 logic				ram_rden;
 logic	[ADDR_WIDTH-1:0]	ram_wraddr;
-logic	[ADDR_WIDTH-1:0]	ram_rdaddr
+logic	[ADDR_WIDTH-1:0]	ram_rdaddr;
 
 assign full = (word_cnt == (ADDR_WIDTH+1)'(RAM_DEPTH));
 assign empty = (word_cnt == (ADDR_WIDTH+1)'(0));
