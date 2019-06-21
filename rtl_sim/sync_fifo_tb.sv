@@ -22,7 +22,7 @@ parameter		DATA_WIDTH = 32,
 // DUT Signal
 //******************************************************************************************
 logic				clk		;	// Clock input
-logic				rst		;	// Active low asynchronous reset
+logic				rstb		;	// Active low asynchronous reset
 logic	[DATA_WIDTH-1:0]	data_in		;	// Data input
 logic				rd_en		;	// Read enable
 logic				wr_en		;	// Write Enable
@@ -59,9 +59,9 @@ begin
 	wr_en = 0;
 	sclr = 0;
 	
-	rst = 1;
+	rstb = 0;
 	#(2)
-	rst = 0;
+	rstb = 1;
 end
 
 
@@ -95,9 +95,9 @@ end
 
 //FIFO read control
 //assign rd_en = ~empty;
-// always_ff@(posedge clk or posedge rst)
+// always_ff@(posedge clk or posedge rstb)
 // begin
-	// if (rst)
+	// if (rstb)
 		// rd_en <= 0;
 	// else
 		// rd_en <= ~empty;
@@ -139,7 +139,7 @@ sync_fifo	 #(	.DATA_WIDTH		(DATA_WIDTH	),
 
 DUT(
 		.clk		(clk		),	// Clock input
-		.rst		(rst		),	// Active low reset
+		.rstb		(rstb		),	// Active low reset
 		.data_in	(data_in	),	// Data input
 		.rd_en		(rd_en		),	// Read enable
 		.wr_en		(wr_en		),	// Write Enable
