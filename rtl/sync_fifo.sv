@@ -60,7 +60,7 @@ assign aempty = (word_cnt <= (ADDR_WIDTH+1)'(AEMPTY_LEVEL));
 //Write pointer
 always_ff@(posedge clk or negedge rstb)
 begin
-	if (rst) 
+	if (~rstb) 
 		wr_pointer <= (ADDR_WIDTH)'(0);
 	else if (sclr)
 		wr_pointer <= (ADDR_WIDTH)'(0);
@@ -74,7 +74,7 @@ if (LOOKAHEAD)
 begin
 	always_ff@(posedge clk or negedge rstb)
 	begin
-		if (rst)
+		if (~rstb)
 			rd_pointer <= (ADDR_WIDTH)'(1);		//init to 1 for lookahead architecture
 		else if (sclr)
 			rd_pointer <= (ADDR_WIDTH)'(1);
@@ -86,7 +86,7 @@ else
 begin
 	always_ff@(posedge clk or negedge rstb)
 	begin
-		if (rst)
+		if (~rstb)
 			rd_pointer <= (ADDR_WIDTH)'(0);
 		else if (sclr)
 			rd_pointer <= (ADDR_WIDTH)'(0);
@@ -99,7 +99,7 @@ endgenerate
 //Word counter
 always_ff@ (posedge clk or negedge rstb)
 begin
-	if (rst) 
+	if (~rstb) 
 		word_cnt <= (ADDR_WIDTH+1)'(0);
 	else if (sclr)
 		word_cnt <= (ADDR_WIDTH+1)'(0);
@@ -168,7 +168,7 @@ begin
 	//First word MUX
 	always_ff@(posedge clk or negedge rstb)
 	begin
-		if (rst)
+		if (~rstb)
 			use_buffer <= 1'b0;
 		else if (use_buffer_next)
 			use_buffer <= 1'b1;
@@ -179,7 +179,7 @@ begin
 	//First word buffer
 	always_ff@(posedge clk or negedge rstb)
 	begin
-		if (rst)
+		if (~rstb)
 			word_buffer <= (DATA_WIDTH)'(0);
 		else if (use_buffer_next)
 			word_buffer <= data_in;
